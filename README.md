@@ -1,117 +1,144 @@
-Voici une version **simplifiée et modernisée** du README pour votre nouveau projet **Digital Twin Sportif**, en conservant la même structure que l'ancien projet Weather-City mais avec le nouveau thème :
-
----
-
-# **🏃 Athlete Performance Digital Twin**  
-*Surveillance temps réel des données biométriques d'un athlète*
+# 🏃 Athlete Performance Digital Twin
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/yourusername/athlete-digital-twin/ci.yml)](https://github.com/yourusername/athlete-digital-twin/actions)
 [![License](https://img.shields.io/github/license/yourusername/athlete-digital-twin)](LICENSE)
 
-## **📖 Aperçu du Projet**  
-Ce dashboard affiche en temps réel les performances d'un athlète (rythme cardiaque, vitesse, distance) via des capteurs IoT ou des données simulées.  
-**Technologies clés** :  
-- **Backend** : FastAPI/Django  
-- **Frontend** : React + Chart.js/Plotly  
-- **Temps réel** : WebSocket (Socket.io ou Django Channels)  
-- **Base de données** : PostgreSQL/InfluxDB  
+## 📖 Project Overview
 
----
+**Athlete Performance Digital Twin** is a real-time monitoring system for tracking biometric and performance data of athletes during training or competition. It collects data from IoT sensors (or simulated sources), stores and analyzes the data, and delivers live insights via a responsive dashboard.
 
-## **🚀 Démarrage Rapide**  
-### Prérequis  
-- Python 3.10+  
-- Docker (optionnel)  
-- Capteur IoT (ex: Polar H10) *ou données simulées*  
+### Key Features
 
-### Installation  
+* **Live Biometric Monitoring**: Heart rate, speed, distance, GPS data updated every second.
+* **Performance Dashboard**: Interactive visualizations with charts and maps.
+* **Real-Time Stack**: FastAPI or Django backend, WebSocket streaming, Redis or InfluxDB storage.
+* **Frontend UX**: Built with React and Chart.js/Plotly for smooth live updates.
+* **Scalable Deployment**: Containerized (Docker/Kubernetes) for edge or cloud use.
+
+## 🚀 Quickstart
+
+### Prerequisites
+
+* Python 3.10+ and pip
+* Docker & Docker Compose (optional for deployment)
+* Redis or InfluxDB
+* Optional: Real IoT device (e.g. Polar H10) or use data simulator
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/yourusername/athlete-digital-twin.git
+   cd athlete-digital-twin
+   ```
+
+2. **Create a virtual environment & install dependencies**
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+3. **Environment Variables**
+
+   Create a `.env` file in the project root:
+
+   ```dotenv
+   DEBUG=True
+   API_KEY=<your-sensor-or-simulation-api-key>
+   REDIS_URL=redis://localhost:6379/0
+   ```
+
+4. **Start Backend & Frontend**
+
+   ```bash
+   # Start backend
+   uvicorn app.main:app --reload
+
+   # Start frontend (from /frontend folder)
+   npm install
+   npm start
+   ```
+
+5. **Access the Dashboard**
+
+   Open your browser at `http://localhost:3000` to view real-time athlete metrics.
+
+## 📐 Architecture
+
+```text
++-------------------+     +-------------+     +-------------------+
+|  IoT Sensors or   | --> | FastAPI /   | --> |  Redis / InfluxDB |
+|   Simulator       |     | Django API  |     |  (Time-series DB) |
++-------------------+     +-------------+     +-------------------+
+                                  |
+                                  v
+                        +-------------------+
+                        | WebSocket Server  |
+                        +-------------------+
+                                  |
+                                  v
+                      +-------------------------+
+                      | React + Chart.js/Plotly |
+                      +-------------------------+
+```
+
+1. **Data Input**: From BLE sensors or simulated scripts.
+2. **Backend**: API layer with real-time data processing and storage.
+3. **WebSocket**: Pushes updates to the frontend.
+4. **Frontend**: Renders dashboards for coaches or athletes.
+
+## 🛠️ Configuration
+
+* **SIMULATION\_MODE**: Enable data simulation instead of real sensor input.
+* **THRESHOLDS**: Set critical heart rate or performance alert levels.
+* **DATA\_FREQUENCY**: Adjust data polling/simulation frequency (default: 1s).
+
+All configs can be managed via `.env` or a config file (`config.yaml`).
+
+## 🚢 Deployment
+
+### Docker Compose
+
 ```bash
-git clone https://github.com/yourusername/athlete-digital-twin.git
-cd athlete-digital-twin
-pip install -r requirements.txt
+docker-compose up --build -d
 ```
 
-### Configuration (.env)  
-```dotenv
-API_KEY=<clé_capteur_ou_simulation>
-REDIS_URL=redis://localhost:6379
-```
+Includes backend, frontend, Redis, and optional simulator.
 
-### Lancer  
-```bash
-python app.py  # Backend
-npm start     # Frontend (dans /frontend)
-```
-➡️ Ouvrir `http://localhost:3000`
+### Kubernetes
 
----
+1. Build and push Docker images.
 
-## **📐 Architecture**  
-```mermaid
-flowchart LR
-    A[Capteur IoT/Simulation] -->|Bluetooth/API| B(FastAPI/Django)
-    B --> C[(PostgreSQL/Redis)]
-    C --> D[WebSocket]
-    D --> E[Frontend React]
-```
+2. Apply manifests:
 
-1. **Collecte** : Données depuis un capteur ou génération aléatoire.  
-2. **Stockage** : Sauvegarde dans une base de données temps réel.  
-3. **Visualisation** : Dashboard interactif avec graphiques.  
+   ```bash
+   kubectl apply -f k8s/deployment.yml
+   kubectl apply -f k8s/service.yml
+   ```
 
----
+3. Expose via Ingress or LoadBalancer.
 
-## **🛠️ Fonctionnalités**  
-✅ **Données temps réel** : Rythme cardiaque, vitesse, GPS  
-✅ **Alertes** : Seuils personnalisés (ex: fréquence cardiaque trop élevée)  
-✅ **Historique** : Comparaison avec les sessions passées  
-✅ **Multi-sport** : Course, cyclisme, natation  
+## ⚙️ Monitoring & Logging
 
----
+* **Metrics**: Custom Prometheus metrics for heart rate, speed spikes, etc.
+* **Dashboards**: Grafana panels for athlete session analysis.
+* **Logging**: Structured logs for performance review and alerts.
 
-## **🚢 Déploiement**  
-### Avec Docker  
-```bash
-docker-compose up --build
-```
-*Inclut : Backend, Frontend, Redis*
+## 🏗️ Future Enhancements
 
-### Kubernetes  
-Exemple :  
-```yaml
-kubectl apply -f k8s/deployment.yaml
-```
+1. Integration with **Garmin/Apple Watch APIs**
+2. AI-based **training recommendations**
+3. Gesture & posture recognition using camera (OpenPose/MediaPipe)
+4. Voice assistant for **real-time coaching feedback**
+5. Historical comparison with anomaly detection
 
----
+## 🤝 Contributing
 
-## **📈 Améliorations Futures**  
-- Intégration **Apple Watch/Garmin**  
-- **Recommandations** d'entraînement (IA)  
-- **Reconnaissance gestuelle** via caméra  
+1. Fork this repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add your feature'`)
+4. Open a Pull Request 🚀
 
----
-
-## **🤝 Contribuer**  
-1. Forkez le projet  
-2. Créez une branche (`feature/nouvelle-fonctionnalité`)  
-3. Ouvrez une **Pull Request**  
-
----
-
-## **📜 Licence**  
-MIT © VotreNom  
-
----
-
-### **📌 Notes**  
-- Pour utiliser un **capteur réel**, configurez le fichier `sensors/config.py`.  
-- Un script de simulation est inclus (`/simulator`).  
-
----
-
-Cette version :  
-- **Conserve la structure** de l'ancien projet  
-- **Simplifie les étapes techniques**  
-- **Met l'accent sur le sport** au lieu de la météo  
-
-Besoin d'ajuster des détails ? 😊
