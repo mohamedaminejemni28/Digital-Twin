@@ -1,0 +1,20 @@
+<template>
+    <name>AthleteDataIngestion</name>
+    <description>Flow for ingesting and routing athlete sensor data</description>
+    <processors>
+        <processor>
+            <name>GetFile</name>
+            <properties>
+                <Input Directory>/data/raw</Input Directory>
+                <Keep Source File>false</Keep Source File>
+            </properties>
+        </processor>
+        <processor>
+            <name>PutKafka</name>
+            <properties>
+                <Topic Name>athlete.metrics</Topic Name>
+                <Kafka Brokers>localhost:9092</Kafka Brokers>
+            </properties>
+        </processor>
+    </processors>
+</template>
